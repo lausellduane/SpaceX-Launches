@@ -1,0 +1,78 @@
+<div class="app-launch-list">
+<!--------------------Headers-------------------->
+  <mat-grid-list cols="7" rowHeight="100px" style="backgroundColor: #d9d9d9">
+    <div *ngFor="let header of headers" class="headers" >
+      <mat-grid-tile
+          *ngIf="header.name != 'id'"
+          [colspan]="header.cols"
+          [rowspan]="1"
+      >
+        <b>{{ header.name }}</b>
+      </mat-grid-tile>
+    </div>
+  </mat-grid-list>
+<!--------------------Headers-------------------->
+
+<!--------------------Grid List-------------------->
+  <div *ngIf="response">
+    <mat-grid-list cols="7" rowHeight="100px">
+<!--      Iterate over gridData-->
+      <div *ngFor="let row of gridData">
+<!--        Filter out id, links and rocket columns. Id column is not necessary-->
+        <mat-grid-tile
+          *ngIf="row.name != 'id' && row.name != 'links' && row.name != 'rocket'"
+          [colspan]="row.cols"
+          [rowspan]="1"
+        >
+          {{ row.text }}
+        </mat-grid-tile>
+<!--        For rows that are links render if presskit is populated-->
+        <mat-grid-tile
+            *ngIf="row.name == 'links'"
+            [colspan]="row.cols"
+            [rowspan]="1"
+        >
+          <a *ngIf="row.name == 'links' && row.text.presskit" mat-raised-button href="{{ row.text.presskit }}" target="_blank">Link</a>
+        </mat-grid-tile>
+        <mat-grid-tile
+            *ngIf="row.name == 'rocket'"
+            [colspan]="row.cols"
+            [rowspan]="1"
+        >
+          {{ row.text.name }}
+        </mat-grid-tile>
+      </div>
+    </mat-grid-list>
+  </div>
+<!--------------------Grid List-------------------->
+
+<!--------------------Pagination-------------------->
+  <div class="example-button-row">
+<!--    Previous Page-->
+    <button mat-icon-button color="warn" (click)="getPrevPage()" disabled="{{ page === 1 }}" style="margin: 10px">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+<!--    Items per Page-->
+    <mat-form-field appearance="fill">
+      <mat-label>Rows</mat-label>
+      <mat-select [(value)]="limit" (selectionChange)="selectLimit($event)">
+        <mat-option></mat-option>
+        <mat-option [value]="10">10</mat-option>
+        <mat-option [value]="20">20</mat-option>
+        <mat-option [value]="50">50</mat-option>
+        <mat-option [value]="100">100</mat-option>
+      </mat-select>
+    </mat-form-field>
+<!--    Select Page-->
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Page of {{ totalPages }}</mat-label>
+      <input matInput type="number" [value]="page" (change)="selectPage($event)">
+    </mat-form-field>
+<!--    Next Page-->
+    <button mat-icon-button color="warn" (click)="getNextPage()" disabled="{{ page === totalPages }}">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+<!--------------------Pagination-------------------->
+
+</div>
